@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "bin": {
+    "tre-export": "bin.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,11 +13,21 @@
     "type": "git",
     "url": "git+https://github.com/regular/tre-export.git"
   },
-  "keywords": [],
+  "keywords": ["tre"],
   "author": "Jan Bölsche <jan@lagomorph.de> (https://regular.codes/)",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/regular/tre-export/issues"
   },
-  "homepage": "https://github.com/regular/tre-export#readme"
+  "homepage": "https://github.com/regular/tre-export#readme",
+  "dependencies": {
+    "debug": "^4.2.0",
+    "minimist": "^1.2.5",
+    "pull-stream": "^3.6.14",
+    "rc": "^1.2.8",
+    "ssb-keys": "^8.0.0",
+    "ssb-zero-conf-client": "^1.0.1",
+    "stream-to-pull-stream": "^1.7.3",
+    "traverse": "^0.6.6"
+  }
 }
