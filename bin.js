@@ -17,8 +17,14 @@ debug('read .trerc from %s: %O', path, conf)
 
 if (argv._.length<1 || argv.help) {
   const bin = argv['run-by-tre-cli'] ? 'tre export' : 'tre-export'
-  console.error(fs.readFileSync(`${__dirname}/usage.txt`, 'utf8'))
-  process.exit(1)
+  if (argv.help) {
+    console.error('USAGE\m  ' + require('./usage')(bin))
+    console.error(require('./help'))
+    process.exit(0)
+  } else {
+    console.error('Missing argument\nUsage: ' + require('./usage')(bin))
+    process.exit(1)
+  }
 }
 
 

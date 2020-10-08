@@ -1,7 +1,4 @@
-USAGE
-
-  tre-export DESTDIR|- [--field X.Y.Z] --type CONTENTTYPE --branch BRANCH [--forceExt EXT] [--lowerCase] [--kebabCase] [--removeMsgRefs] [--dryRun]
-
+module.exports = `
 DESCRIPTION
 
   Queries ssb messages either by content.type or by content.branch. These messages are then written to one file each, or output to STDOUT as double-newline-delimited JSON. Single fields can be extracted from the message content, and/or references to other messages can be stripped. (for example when exporting mesages with the purpose of importing them on a different ssb network where these references would not be valid). Names for output files are derived from message content (see below). There are a few options to modify default file name generation.
@@ -32,11 +29,4 @@ OUTPUT FILE NAME MODIFIERS
 EXAMPLE
 
   tre-export assets/cs --type stylesheet --kebabCase --lowerCase --forceExt css
-
-AUTHOR
-
-  Copyright 2020 Jan Boelsche (jan@lagomorph.de)
-
-LICENSE
-
-  MIT
+`
