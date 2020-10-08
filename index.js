@@ -85,7 +85,7 @@ module.exports = function doExport(ssb, destDir, opts, cb) {
     pull.filter(),
     pull.map(({filename, content}) => {
       if (typeof content == 'object') {
-        content = JSON.stringify(content, null, 2)
+        content = JSON.stringify(content, null, 2) + '\n\n'
       }
       return {filename, content}
     }),
