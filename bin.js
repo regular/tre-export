@@ -3,6 +3,7 @@ const {parse, join, resolve, dirname} = require('path')
 const ssbClient = require('ssb-zero-conf-client')
 const ssbKeys = require('ssb-keys')
 const debug = require('debug')('tre-export:bin')
+const mkdirp = require('mkdirp')
 const doExport = require('.')
 
 const conf = require('rc')('tre')
@@ -24,6 +25,7 @@ if (argv._.length<1) {
 
 const destDir = resolve(argv._[0])
 console.error('destination directory:', destDir)
+mkdirp.sync(destDir)
 
 ssbClient(conf.caps.shs, keys, (err, ssb) => {
   function bail(err) {
