@@ -4,6 +4,7 @@ const debug = require('debug')('tre-export')
 const pull = require('pull-stream')
 const toPull = require('stream-to-pull-stream')
 const traverse = require('traverse')
+const {isMsgId} = require('ssb-ref')
 
 module.exports = function doExport(ssb, destDir, opts, cb) {
   const {dryRun, branch, type} = opts
@@ -63,6 +64,13 @@ module.exports = function doExport(ssb, destDir, opts, cb) {
       return {filename, content}
     }),
     pull.map(({filename, content}) => {
+      if (opts.removeMsgRefs) {
+        content = traverse(content).map(function(x) {
+          if (isMsgId(x)) {
+            this.remove()
+          }
+        })
+      }
       if (opts.field) {
         const path = opts.field.split('.')
         content = traverse(content).get(path)

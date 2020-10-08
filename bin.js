@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 const {parse, join, resolve, dirname} = require('path')
+const pull = require('pull-stream')
 const ssbClient = require('ssb-zero-conf-client')
 const ssbKeys = require('ssb-keys')
 const debug = require('debug')('tre-export:bin')
 const mkdirp = require('mkdirp')
+const {stdout} = require('pull-stdio')
 const doExport = require('.')
 
 const conf = require('rc')('tre')
@@ -19,13 +21,20 @@ if (!path) {
 const keys = ssbKeys.loadSync(join(path, '../.tre/secret'))
 
 if (argv._.length<1) {
-  console.error('USAGE: tre-export DESTDIR [--field FILENAME_OR_DOTPATH] --type CONTENTTYPE --branch BRANCH [--forceExt EXT] [--lowerCase] [--kebabCase] [--dryRun]')
+  console.error('USAGE: tre-export DESTDIR|- [--field FILENAME_OR_DOTPATH] --type CONTENTTYPE --branch BRANCH [--forceExt EXT] [--lowerCase] [--kebabCase] [--removeMsgRefs] [--dryRun]')
   process.exit(1)
 }
 
+let makeSink
 const destDir = resolve(argv._[0])
-console.error('destination directory:', destDir)
-mkdirp.sync(destDir)
+if (argv._[0] == '-' || argv.stdout) {
+  makeSink = function(filename, cb) {
+    return pull.drain(data=>process.stdout.write(data), cb)
+  }
+} else {
+  console.error('destination directory:', destDir)
+  mkdirp.sync(destDir)
+}
 
 ssbClient(conf.caps.shs, keys, (err, ssb) => {
   function bail(err) {
@@ -37,8 +46,10 @@ ssbClient(conf.caps.shs, keys, (err, ssb) => {
   }
   bail(err)
 
-  doExport(ssb, destDir, argv, err => {
+  doExport(ssb, destDir, Object.assign({}, argv, {makeSink}), err => {
     bail(err)
-    ssb.close()
+    ssb.close(()=>{
+      process.exit(0)
+    })
   })
 })
